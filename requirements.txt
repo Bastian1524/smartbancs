@@ -1,0 +1,9 @@
+﻿fastapi
+uvicorn[standard]
+asyncpg
+sqlalchemy[asyncio]
+redis
+httpx
+prometheus-client
+pandas
+pyarrow
