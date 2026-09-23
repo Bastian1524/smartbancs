@@ -20,8 +20,4 @@ Este proyecto solo funciona con Docker Desktop corriendo.
 
 ## Levantar con 1 Comando (para el jurado)
 
-```bash
-git clone https://github.com/Bastian1524/smartbancs.git
-cd smartbancs
-docker compose up --build -d
-# Esperar 15s a que db esté Healthy
+git clone https://github.com/Bastian1524/smartbancs.git && cd smartbancs && docker compose down -v && docker compose up --build -d && echo "Esperando 15s a que DB este Healthy..." && sleep 15 && python test_concurrent.py && docker compose exec transaction_api python src/etl/bancs_etl.py && docker exec -it smartbancs-db-1 psql -U bancs -d smartbancs -c "SELECT id, balance, SUM(balance) OVER() as total_20000 FROM accounts;" && echo "--- METRICS ---" && curl -s http://localhost:8000/metrics | head -20 && echo "--- ETL FILES ---" && docker compose exec transaction_api ls -lh tmp/
