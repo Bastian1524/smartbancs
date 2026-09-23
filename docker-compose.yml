@@ -9,6 +9,7 @@
       - "5432:5432"
     volumes:
       - ./infra/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U bancs -d smartbancs"]
       interval: 2s
@@ -27,12 +28,15 @@
     environment:
       DATABASE_URL: postgresql://bancs:bancs123@db:5432/smartbancs
       REDIS_URL: redis://redis:6379
+      AI_SERVICE_URL: http://ai_api:8001
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_started
-    command: uvicorn src.transaction_service.main:app --host 0.0.0.0 --port 8000
+      ai_api:
+        condition: service_started
+    command: uvicorn src.transaction_service.main:app --host 0.0.0.0 --port 8000 --reload
 
   ai_api:
     build: .
@@ -43,4 +47,7 @@
     depends_on:
       db:
         condition: service_healthy
-    command: uvicorn src.ai_service.main:app --host 0.0.0.0 --port 8001
+    command: uvicorn src.ai_service.main:app --host 0.0.0.0 --port 8001 --reload
+
+volumes:
+  pgdata:

@@ -1,9 +1,20 @@
-﻿fastapi
+﻿# API Core - Alto rendimiento
+fastapi
 uvicorn[standard]
+
+# DB Async - Para 10k tps sin bloquear
 asyncpg
 sqlalchemy[asyncio]
+
+# Cache / Cola para no saturar Bancs
 redis
+
+# Cliente HTTP async para IA no bloqueante
 httpx
+
+# Observabilidad 3.4
 prometheus-client
+
+# ETL Bancs 3.2 - Transformación para IA
 pandas
 pyarrow
